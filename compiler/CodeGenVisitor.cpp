@@ -79,17 +79,21 @@ std::any CodeGenVisitor::visitVar_expr(ifccParser::Var_exprContext *ctx) {
   return 0;
 }
 std::any CodeGenVisitor::visitAdd_sub_expr(ifccParser::Add_sub_exprContext *ctx) {
-  this->visit(ctx->expr(0));
-  std::cout << "    pushq \%rax\n";
-  this->visit(ctx->expr(1));
-  std::cout << "    popq \%rcx\n";
-  if(ctx->ADD()) 
-     std::cout << "    addl \%ecx, \%eax\n";
-  else if(ctx->SUB())
-     std::cout << "    subl \%ecx, \%eax\n";
+    this->visit(ctx->expr(0));
+    std::cout << "    pushq %rax\n";
 
-  return 0; 
-
+    this->visit(ctx->expr(1)); 
+    
+    std::cout << "    movl %eax, %ecx\n"; 
+    std::cout << "    popq %rax\n";       
+    
+    if (ctx->ADD()) {
+        std::cout << "    addl %ecx, %eax\n"; // 8 + 9
+    } else {
+        std::cout << "    subl %ecx, %eax\n"; // 8 - 9 = -1
+    }
+    
+    return 0;
 }
 
 std::any CodeGenVisitor::visitMult_div_mod_expr(ifccParser::Mult_div_mod_exprContext *ctx) {
@@ -114,6 +118,15 @@ std::any CodeGenVisitor::visitMult_div_mod_expr(ifccParser::Mult_div_mod_exprCon
     }
     return 0;
 }
+
+std::any CodeGenVisitor::visitMinus_expr(ifccParser::Minus_exprContext *ctx) {
+  this->visit(ctx->expr());
+  std::cout << "    negl \%eax\n";
+  return 0;
+}
+
+
 std::any CodeGenVisitor::visitPar_expr(ifccParser::Par_exprContext *ctx) {
-  return this->visit(ctx->expr());
+  this->visit(ctx->expr());
+  return 0;
 }

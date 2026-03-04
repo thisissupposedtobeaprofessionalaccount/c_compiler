@@ -16,6 +16,7 @@ return_stmt : RETURN expr ';' ;
 
 expr : PAR_OPEN expr PAR_CLOSE # par_expr
      | expr (MULT | DIV | MOD) expr # mult_div_mod_expr
+     | SUB expr # minus_expr
      | expr (ADD | SUB) expr # add_sub_expr
      | VAR # var_expr
      | CONST # const_expr
