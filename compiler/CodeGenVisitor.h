@@ -1,22 +1,26 @@
 #pragma once
 
+#include "SymbolTable.h"
 #include "antlr4-runtime.h"
 #include "generated/ifccBaseVisitor.h"
 #include <any>
 #include <map>
 #include <string>
+#include "SymbolTableVisitor.h"
+
 
 class CodeGenVisitor : public ifccBaseVisitor {
 public:
+  CodeGenVisitor() : varIdx() {}
+  CodeGenVisitor(SymbolTable varIdx) : varIdx(varIdx) {}
+
   virtual std::any visitProg(ifccParser::ProgContext *ctx) override;
+
+  virtual std::any visitAssignment(ifccParser::AssignmentContext *ctx) override; 
 
   // Return
   virtual std::any
   visitReturn_stmt(ifccParser::Return_stmtContext *ctx) override;
-  // Declaration and Assignment
-  virtual std::any
-  visitDeclaration(ifccParser::DeclarationContext *ctx) override;
-  virtual std::any visitAssignment(ifccParser::AssignmentContext *ctx) override;
 
   // Expr
   virtual std::any visitMult_div_mod_expr(ifccParser::Mult_div_mod_exprContext *ctx) override;
@@ -37,6 +41,5 @@ public:
   virtual std::any visitVar_expr(ifccParser::Var_exprContext *ctx) override;
 
 protected:
-  unsigned int varCnt = 0;
-  std::map<std::string, int> varIdx;
+  SymbolTable varIdx;
 };

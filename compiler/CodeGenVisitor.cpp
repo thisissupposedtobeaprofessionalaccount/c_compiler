@@ -1,4 +1,5 @@
 #include "CodeGenVisitor.h"
+#include "SymbolTableVisitor.h"
 #include <iostream>
 #include <string>
 
@@ -22,21 +23,9 @@ std::any CodeGenVisitor::visitProg(ifccParser::ProgContext *ctx) {
   return 0;
 }
 
-std::any CodeGenVisitor::visitDeclaration(ifccParser::DeclarationContext *ctx) {
 
-  std::string varName = ctx->VAR()->getText();
-
-  if (this->varIdx.count(varName) != 0) {
-    std::cerr << "Error : variable " << varName << " already declared\n";
-    return 1;
-  }
-
-  this->varIdx[varName] = (int)(++varCnt);
-
-  return 0;
-}
-
-std::any CodeGenVisitor::visitAssignment(ifccParser::AssignmentContext *ctx) {
+std::any
+CodeGenVisitor::visitAssignment(ifccParser::AssignmentContext *ctx) {
   std::string varName = ctx->VAR()->getText();
 
   if (this->varIdx.count(varName) == 0) {
@@ -46,7 +35,7 @@ std::any CodeGenVisitor::visitAssignment(ifccParser::AssignmentContext *ctx) {
 
   this->visit(ctx->expr());
 
-  std::cout << "    movl \%eax, " << -4 * this->varIdx[varName] << "(%rbp)\n";
+  std::cout << "    movl %eax, " << -4 * this->varIdx[varName] << "(%rbp)\n";
 
   return 0;
 }
