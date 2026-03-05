@@ -31,10 +31,9 @@ expr : PAR_OPEN expr PAR_CLOSE # par_expr
      | CONST # const_expr
      ;
 
-
 RETURN : 'return' ;
 CONST : [0-9]+ ;
-VAR : [a-zA-Z][a-zA-Z0-9]+ ;
+VAR : [a-zA-Z][a-zA-Z0-9]* ;
 COMMENT : '/*' .*? '*/' -> skip ;
 DIRECTIVE : '#' .*? '\n' -> skip ;
 WS    : [ \t\r\n] -> channel(HIDDEN);

@@ -130,6 +130,74 @@ std::any CodeGenVisitor::visitNot_expr(ifccParser::Not_exprContext *ctx) {
   return 0;
 }
 
+std::any CodeGenVisitor::visitShift_expr(ifccParser::Shift_exprContext *ctx) {
+  this->visit(ctx->expr(0));
+  std::cout << "    pushq %rax\n";
+  this->visit(ctx->expr(1));
+  std::cout << "    movl %eax, %ecx\n";
+  std::cout << "    popq %rax\n";
+
+  if (ctx->SHIFT_L()) {
+    std::cout << "    sall %cl, %eax\n";
+  } else if (ctx->SHIFT_R()) {
+    std::cout << "    sarl %cl, %eax\n";
+  }
+
+  return 0;
+}
+
+std::any CodeGenVisitor::visitBit_and_expr(ifccParser::Bit_and_exprContext *ctx) {
+  this->visit(ctx->expr(0));
+  std::cout << "    pushq %rax\n";
+  this->visit(ctx->expr(1));
+  std::cout << "    movl %eax, %ecx\n";
+  std::cout << "    popq %rax\n";
+
+  std::cout << "    andl %ecx, %eax\n";
+
+  return 0;
+}
+
+std::any CodeGenVisitor::visitBit_or_expr(ifccParser::Bit_or_exprContext *ctx) {
+  this->visit(ctx->expr(0));
+  std::cout << "    pushq %rax\n";
+  this->visit(ctx->expr(1));
+  std::cout << "    movl %eax, %ecx\n";
+  std::cout << "    popq %rax\n";
+
+  std::cout << "    orl %ecx, %eax\n";
+
+  return 0;
+}
+
+std::any CodeGenVisitor::visitBool_and_expr(ifccParser::Bool_and_exprContext *ctx) {
+  this->visit(ctx->expr(0));
+  std::cout << "    pushq %rax\n";
+  this->visit(ctx->expr(1));
+  std::cout << "    movl %eax, %ecx\n";
+  std::cout << "    popq %rax\n";
+
+  std::cout << "    andl %ecx, %eax\n";
+  std::cout << "    movl $0, %eax\n";
+  std::cout << "    setne %al\n";
+
+  return 0;
+}
+
+std::any CodeGenVisitor::visitBool_or_expr(ifccParser::Bool_or_exprContext *ctx) {
+  this->visit(ctx->expr(0));
+  std::cout << "    pushq %rax\n";
+  this->visit(ctx->expr(1));
+  std::cout << "    movl %eax, %ecx\n";
+  std::cout << "    popq %rax\n";
+
+  std::cout << "    orl %ecx, %eax\n";
+  std::cout << "    movl $0, %eax\n";
+  std::cout << "    setne %al\n";
+
+  return 0;
+}
+
 std::any CodeGenVisitor::visitPar_expr(ifccParser::Par_exprContext *ctx) {
   this->visit(ctx->expr());
   return 0;
@@ -174,6 +242,7 @@ std::any CodeGenVisitor::visitCmp_eq_expr(ifccParser::Cmp_eq_exprContext *ctx) {
 
   return 0;
 };
+
 std::any CodeGenVisitor::visitEq_expr(ifccParser::Eq_exprContext *ctx) {
   this->visit(ctx->expr(0));
   std::cout << "    pushq %rax\n";
