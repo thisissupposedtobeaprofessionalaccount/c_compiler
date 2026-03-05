@@ -123,6 +123,13 @@ std::any CodeGenVisitor::visitMinus_expr(ifccParser::Minus_exprContext *ctx) {
   return 0;
 }
 
+std::any CodeGenVisitor::visitNot_expr(ifccParser::Not_exprContext *ctx) {
+  this->visit(ctx->expr());
+  std::cout << "    xorl $1, \%eax\n";
+
+  return 0;
+}
+
 std::any CodeGenVisitor::visitPar_expr(ifccParser::Par_exprContext *ctx) {
   this->visit(ctx->expr());
   return 0;
