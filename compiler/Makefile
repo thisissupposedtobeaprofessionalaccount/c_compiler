@@ -64,6 +64,8 @@ gui:
 	javac -cp $(ANTLRJAR) -d build generated/*.java
 	java -cp $(ANTLRJAR):build org.antlr.v4.gui.TestRig ifcc axiom -gui $(FILE)
 
+tests:
+	python3 ../ifcc-test.py ../testfiles
 ##########################################
 # delete all machine-generated files
 clean:
